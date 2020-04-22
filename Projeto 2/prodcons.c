@@ -1,5 +1,12 @@
+/** 
+ * Higor Tessari - 10345251
+ * Lucas Tavares dos Santos - 10295180
+ * Renata Oliveira Brito - 10373663
+ */
+
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "queue.h"
 
 const int tam_buffer = 10; /** Tamanho do buffer da fila */
@@ -13,6 +20,8 @@ void *produtor(void *arg){
         int *value = malloc(sizeof(*value)); //aloca um espaço de memoria para o valor a ser inserido na fila
         *value = i; //associa o numero da interacao ao valor a ser inserido na fila
         enqueue(arg, value); //insere o valor na fila
+        if(i % 2 == 1) //condicao para trocar entre produtor e consumidor
+            sleep(1);
     }
 }
 
@@ -21,6 +30,8 @@ void *consumidor(void *arg){
     for (int i = 0; i < qtd_prod * produtores / consumidores; ++ i){
         int *value = dequeue(arg); //remove o elemento e retorna o valor que foi retirado
         free(value); //libera o valor da memoria
+        if (i % 2 == 1) //condicao para trocar entre produtor e consumidor
+            sleep(1);
     }
 }
 

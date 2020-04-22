@@ -1,4 +1,11 @@
+/** 
+ * Higor Tessari - 10345251
+ * Lucas Tavares dos Santos - 10295180
+ * Renata Oliveira Brito - 10373663
+ */
+
 #include <pthread.h>
+#include <sys/syscall.h>
 #include <stdio.h>
 
 typedef struct fila{
@@ -14,10 +21,11 @@ typedef struct fila{
 
 /** Função para inserir elementos na fila */
 void enqueue(queue_t *fila, void *value){
+    int t = syscall(SYS_gettid);
     pthread_mutex_lock(&(fila->mutex)); //bloqueia o acesso a regiao critica
     while (fila->tam == fila->capacidade) //se tiver lotada
         pthread_cond_wait(&(fila->full), &(fila->mutex)); //coloca o processo em modo de espera
-    printf("enqueue %d\n", *(int *)value);
+    printf("Produtor com ID %u produziu %d \n", t, *(int *)value);
     fila->buffer[fila->next_in] = value; //insere o valor no buffer
     ++fila->tam; //incrementa quantidade de elementos na fila
     ++fila->next_in; //incrementa a posicao da fila
@@ -28,11 +36,12 @@ void enqueue(queue_t *fila, void *value){
 
 /** Função para remover elementos da fila */
 void* dequeue(queue_t *fila){
+    int t = syscall(SYS_gettid);
     pthread_mutex_lock(&(fila->mutex)); //bloqueia o acesso a regiao critica
     while (fila->tam == 0) //se tiver vazia
         pthread_cond_wait(&(fila->empty), &(fila->mutex)); //coloca o processo em modo de espera
     void *value = fila->buffer[fila->next_out]; //remove o valor do buffer
-    printf("dequeue %d\n", *(int *)value);
+    printf("Consumidor com ID %u consumiu %d \n", t, *(int *)value);
     --fila->tam; //decrementa quantidade de elementos na fila
     ++fila->next_out; //incrementa a posicao da fila
     fila->next_out %= fila->capacidade; //faz voltar para o inicio se chegou ao fim
