@@ -1,16 +1,6 @@
-/** Struct do quadro de memoria */
-typedef struct quadroMemoria{
-    int PID; //identificador de processo
-    int numPag; //qtd de numero de paginas
-} quadroMemoria;
-
-/** Struct da memoria virtual */
-typedef struct memoria{ 
-    quadroMemoria *quadros; //quadros de memória
-    int tam;
-    int *quadrosLivres; //vetor binário com os quadros livres 
-    int qtd_quadrosLivres; //qtd de quadros livres
-} Memoria;
+#include <stdlib.h>
+#include <stdio.h>
+#include "memoria.h"
 
 /** Funcao para criar uma nova estrutura de memoria */
 Memoria* criaMemoria(int tam){
@@ -23,6 +13,7 @@ Memoria* criaMemoria(int tam){
         mem->quadros[i].numPag = -1; //nao tem nada
     }
     mem->qtd_quadrosLivres = tam;
+    printf("%d\n", mem->qtd_quadrosLivres);
     return mem;
 }
 
@@ -36,19 +27,15 @@ void destroiMemoria(Memoria *mem){
 /** Insere um quadro na memoria */
 int insereQuadro(Memoria *mem, int pid, int numPag){
     int i;
-/*    for(i = 0; i < mem->tam; i++){
+    for(i = 0; i < mem->tam; i++){
         if(mem->quadrosLivres[i] == 1)
             break;
-    }*/
-    i=0;
-    while(mem->quadrosLivres[i] != 1 || i < mem->tam){
-        i++;
     }
     mem->quadros[i].PID = pid;
     mem->quadros[i].numPag = numPag;
     mem->quadrosLivres[i] = 0;
     mem->qtd_quadrosLivres--; //decrementa o numero total de quadros
-
+    
     return i;
 }
 
