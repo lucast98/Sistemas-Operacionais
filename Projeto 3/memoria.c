@@ -13,7 +13,6 @@ Memoria* criaMemoria(int tam){
         mem->quadros[i].numPag = -1; //nao tem nada
     }
     mem->qtd_quadrosLivres = tam;
-    printf("%d\n", mem->qtd_quadrosLivres);
     return mem;
 }
 

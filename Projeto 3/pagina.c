@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 //#include "processo.h"
 //#include "memoria.h"
 #include "pagina.h"

@@ -15,9 +15,7 @@ void push(Fila *fila, int pag){
     Elemento *elem = (Elemento *)malloc(sizeof(Elemento));
     elem->pag = pag;
     elem->prox = NULL; //indica que é o fim
-    printf("oi");
     fila->tam++;
-    printf("oi");
     
     if(fila->inicio == NULL){
         fila->inicio = elem;

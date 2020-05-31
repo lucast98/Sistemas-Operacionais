@@ -1,7 +1,7 @@
 /** Struct do quadro de memoria */
 typedef struct quadroMemoria{
     int PID; //identificador de processo
-    int numPag; //qtd de numero de paginas
+    int numPag; //numero de pagina
 } quadroMemoria;
 
 /** Struct da memoria virtual */

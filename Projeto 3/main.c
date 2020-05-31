@@ -87,6 +87,8 @@ int main(int argc, char const *argv[]){
     // esperado: P1 C (1024)2 ou ##### início do arquivo ######    
     int pid;
     int qtdPag;
+    int qtdQuad;
+    int maxEnd; //quantidade maxima de enderecos possiveis
 
     FILE *fp;
     char str[60]; //armazena a linha do arquivo
@@ -135,7 +137,7 @@ int main(int argc, char const *argv[]){
     subs_alg = toupper(subs_alg); //deixa sempre maiusculo
 
     /** Cria memoria virtual e principal */
-    Memoria *memVirtual = criaMemoria(5*real_size);
+    Memoria *memVirtual = criaMemoria(sec_size);
     Memoria *memPrincipal = criaMemoria(real_size);
 
     /** Processos criados */
@@ -152,11 +154,15 @@ int main(int argc, char const *argv[]){
         splitString(str, pNumber, &mode, op); //divide linha em tres partes (numero de processo-modo-tamanho/operando)
         //printf("%s - %c - %s", pNumber, mode, op);
         pid = getPID(pNumber);
-        qtdPag = real_size/page_size;
+
+        qtdPag = sec_size/page_size; //unidades de tamanho fixo no dispositivo secundario
+        qtdQuad = real_size/page_size; //unidades correspondentes na memoria fisica
+        maxEnd = pow(2, logic_size); //endereco maximo permitido (por causa dos bits)
+
         switch (mode){
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
-                pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag);
+                pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size);
                 if(pro[pid-1] == NULL)
                     printf("Erro ao criar processo\n");
                 else
@@ -164,11 +170,15 @@ int main(int argc, char const *argv[]){
                 break;
             case 'R':
                 // Lê o endereço de memoria especificado logo após
-                lerEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op));
+                if(maxEnd > getDec(mode, op))
+                    lerEndereco(pro[pid-1], getDec(mode, op), page_size);
+                else{
+                    printf("O endereco logico tem mais bits que o permitido.\n");
+                }
                 break;
             case 'W':
                 // Escrita no endereço especificado logo após
-                escreverEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op));
+                //escreverEndereco(pro[pid-1], getDec(mode, op), page_size);
                 break;
             case 'P':
                 // Indicando instrução a ser executada pela CPU
