@@ -11,13 +11,19 @@ typedef struct Processo{
 } Processo;
 
 /** Funcao para criar um novo processo */
-Processo* criaProcesso(int, Memoria*, Memoria*, int, int, int);
+Processo* criaProcesso(int, Memoria*, int, int, int);
 
 /** Adiciona pagina na memoria */
 int inserePaginaMemoria(Processo*, Memoria*, int, Swap, bit_pres_aus);
 
 /** Lê o endereco referenciado pela tabela do processo */
-void lerEndereco(Processo*, int, int);
+void lerEndereco(Processo*, Memoria*, int, int);
 
 /** Escreve o endereco referenciado pela tabela do processo */
-void escreverEndereco(Processo*, int, int);
+void escreverEndereco(Processo*, Memoria*, int, int);
+
+/** Indica instrução a ser executada pela CPU */
+void operacaoCPU(Processo*, Memoria*, int, int);
+    
+/** Indica instrução a ser executada pelo IO */
+void operacaoIO(Processo*, Memoria*, int, int);

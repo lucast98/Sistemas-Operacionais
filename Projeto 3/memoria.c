@@ -3,7 +3,8 @@
 #include "memoria.h"
 
 /** Funcao para criar uma nova estrutura de memoria */
-Memoria* criaMemoria(int tam){
+Memoria* criaMemoria(int tam, int tamPag){
+    int qtdQuad = tam/tamPag;
     Memoria *mem = (Memoria*) malloc(sizeof(Memoria));
     mem->quadros = (quadroMemoria*) calloc(tam, sizeof(quadroMemoria));
     mem->tam = tam;
@@ -12,7 +13,7 @@ Memoria* criaMemoria(int tam){
         mem->quadrosLivres[i] = 1;
         mem->quadros[i].numPag = -1; //nao tem nada
     }
-    mem->qtd_quadrosLivres = tam;
+    mem->qtd_quadrosLivres = qtdQuad;
     return mem;
 }
 
@@ -32,10 +33,16 @@ int insereQuadro(Memoria *mem, int pid, int numPag){
     }
     mem->quadros[i].PID = pid;
     mem->quadros[i].numPag = numPag;
+    mem->quadros[i].elemento = 0;
     mem->quadrosLivres[i] = 0;
     mem->qtd_quadrosLivres--; //decrementa o numero total de quadros
     
     return i;
+}
+
+/** Função para atualizar o elemento do quadro */
+void atualizaQuadro(Memoria *mem, int pag, int elem){
+    mem->quadros[pag].elemento = elem;
 }
 
 /** Remove um quadro da memoria */
