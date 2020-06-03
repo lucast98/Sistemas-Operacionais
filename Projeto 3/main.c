@@ -130,10 +130,13 @@ int main(int argc, char const *argv[]){
     }while(real_size % page_size != 0);
     printf("Digite o tamanho maximo da memoria secundaria: ");
     scanf("%d", &sec_size); //tamanho da memoria virtual
-    printf("Digite o algoritmo de substituicao a ser utilizado (L para LRU ou R para relogio): ");
-    scanf(" %c", &subs_alg);
-    subs_alg = toupper(subs_alg); //deixa sempre maiusculo
-
+    do{
+        printf("Digite o algoritmo de substituicao a ser utilizado (L para LRU ou R para relogio): ");
+        scanf(" %c", &subs_alg);
+        subs_alg = toupper(subs_alg); //deixa sempre maiusculo
+        if(subs_alg != 'L' && subs_alg != 'R')
+            printf("Digite um algoritmo de substituicao valido.\n");
+    }while(subs_alg != 'L' && subs_alg != 'R');
     qtdPag = sec_size/page_size; //unidades de tamanho fixo no dispositivo secundario
     qtdQuad = real_size/page_size; //unidades correspondentes na memoria fisica
     maxEnd = pow(2, logic_size); //endereco maximo permitido (por causa dos bits)
@@ -157,7 +160,7 @@ int main(int argc, char const *argv[]){
         splitString(str, pNumber, &mode, op); //divide linha em tres partes (numero de processo-modo-tamanho/operando)
         //printf("%s - %c - %s", pNumber, mode, op);
         pid = getPID(pNumber);
-        printf("Memoria livre: %d\n", memLivre);
+        //printf("Memoria livre: %d\n", memLivre);
         switch (mode){    
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
@@ -176,7 +179,7 @@ int main(int argc, char const *argv[]){
             case 'R':
                 // Lê o endereço de memoria especificado logo após
                 if(maxEnd > getDec(mode, op)){
-                    lerEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre);
+                    lerEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre, subs_alg);
                 }
                 else{
                     printf("O endereco logico tem mais bits que o permitido.\n");
@@ -185,7 +188,7 @@ int main(int argc, char const *argv[]){
             case 'W':
                 // Escrita no endereço especificado logo após
                 if(maxEnd > getDec(mode, op))
-                    escreverEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre);
+                    escreverEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre, subs_alg);
                 else
                     printf("O endereco logico tem mais bits que o permitido.\n");
                 break;

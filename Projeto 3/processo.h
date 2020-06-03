@@ -15,13 +15,13 @@ typedef struct Processo{
 Processo* criaProcesso(int, Memoria*, Memoria*, int, int, int, int*);
 
 /** Lê o endereco referenciado pela tabela do processo */
-void lerEndereco(Processo*, Memoria*, Memoria*, int, int, int*);
+void lerEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 
 /** Escreve o endereco referenciado pela tabela do processo */
-void escreverEndereco(Processo*, Memoria*, Memoria*, int, int, int*);
+void escreverEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 
 /** Troca uma nova pagina por uma antiga com o LRU */
-int trocaPaginaLRU(Processo*, Memoria*, Memoria*, int);
+void trocaPaginaLRU(Processo*, Memoria*, Memoria*, int);
 
 /** Indica instrução a ser executada pela CPU */
 void operacaoCPU(Processo*, Memoria*, int, int);

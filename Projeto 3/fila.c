@@ -43,14 +43,7 @@ int pop(Fila *fila){
     return pag;
 }
 
-/** Verifica se fila esta vazia */
-int estaVazia(Fila *fila){
-    if(fila->inicio == NULL)
-        return 1; //vazio
-    else
-        return 0; //nao vazio
-}
-
+/** Move elemento para o final da fila */
 void moveFim(Fila *fila, int pag){
     Elemento *elem = fila->inicio;
     Elemento *ant;
@@ -62,12 +55,9 @@ void moveFim(Fila *fila, int pag){
         ant = elem;
         elem = elem->prox;
     }
-
     if(elem == NULL)
         return;
-
-    //indica que já é o ultimo elemento
-    if(elem == fila->fim)
+    if(elem == fila->fim) //indica que já é o ultimo elemento
         return;
 
     if(elem == fila->inicio){
@@ -84,6 +74,7 @@ void moveFim(Fila *fila, int pag){
     }
 }
 
+/** Printa todos os elementos da fila */
 void printFila(Fila *fila){
     Elemento *elem = fila->inicio;
     printf("Fila: ");

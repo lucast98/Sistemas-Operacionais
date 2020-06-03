@@ -14,13 +14,11 @@ Fila *criaFila();
 /** Insere pagina na fila */
 void push(Fila*, int);
 
-/** Remove pagina da fila */
+/** Remove pagina da fila (primeiro elemento)*/
 int pop(Fila*);
 
-/** Verifica se fila esta vazia */
-int estaVazia(Fila*);
-
-/** Move pagina para o final da fila */
+/** Move elemento para o final da fila */
 void moveFim(Fila*, int);
 
+/** Printa todos os elementos da fila */
 void printFila(Fila*);
