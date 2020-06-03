@@ -20,7 +20,10 @@ int inserePaginaMemoria(Processo*, Memoria*, int, Swap, bit_pres_aus);
 void lerEndereco(Processo*, Memoria*, int, int);
 
 /** Escreve o endereco referenciado pela tabela do processo */
-void escreverEndereco(Processo*, Memoria*, int, int);
+void escreverEndereco(Processo*, Memoria*, int, int, int);
+
+/** Troca uma nova pagina por uma antiga com o LRU */
+int trocaPaginaLRU(Processo*, Memoria*, int);
 
 /** Indica instrução a ser executada pela CPU */
 void operacaoCPU(Processo*, Memoria*, int, int);

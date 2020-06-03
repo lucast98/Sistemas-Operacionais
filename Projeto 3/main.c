@@ -185,7 +185,7 @@ int main(int argc, char const *argv[]){
             case 'W':
                 // Escrita no endereço especificado logo após
                 if(maxEnd > getDec(mode, op))
-                    escreverEndereco(pro[pid-1], memPrincipal, getDec(mode, op), page_size);
+                    escreverEndereco(pro[pid-1], memPrincipal, getDec(mode, op), page_size, memLivre);
                 else
                     printf("O endereco logico tem mais bits que o permitido.\n");
                 break;
