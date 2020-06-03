@@ -3,6 +3,7 @@
 #include "fila.h"
 
 typedef struct Processo{
+    int tam; //tamanho do processo
     int PID; //identificador de processo
     tabelaPagina *tabPag; //Tabela de paginas
     int pagsUsadas; //qtd de paginas ocupadas
@@ -11,19 +12,16 @@ typedef struct Processo{
 } Processo;
 
 /** Funcao para criar um novo processo */
-Processo* criaProcesso(int, Memoria*, int, int, int);
-
-/** Adiciona pagina na memoria */
-int inserePaginaMemoria(Processo*, Memoria*, int, Swap, bit_pres_aus);
+Processo* criaProcesso(int, Memoria*, Memoria*, int, int, int, int*);
 
 /** Lê o endereco referenciado pela tabela do processo */
-void lerEndereco(Processo*, Memoria*, int, int);
+void lerEndereco(Processo*, Memoria*, Memoria*, int, int, int*);
 
 /** Escreve o endereco referenciado pela tabela do processo */
-void escreverEndereco(Processo*, Memoria*, int, int, int);
+void escreverEndereco(Processo*, Memoria*, Memoria*, int, int, int*);
 
 /** Troca uma nova pagina por uma antiga com o LRU */
-int trocaPaginaLRU(Processo*, Memoria*, int);
+int trocaPaginaLRU(Processo*, Memoria*, Memoria*, int);
 
 /** Indica instrução a ser executada pela CPU */
 void operacaoCPU(Processo*, Memoria*, int, int);

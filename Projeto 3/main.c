@@ -139,9 +139,9 @@ int main(int argc, char const *argv[]){
     maxEnd = pow(2, logic_size); //endereco maximo permitido (por causa dos bits)
 
     /** Cria memoria virtual e principal */
-    //Memoria *memVirtual = criaMemoria(sec_size, page_size);
+    Memoria *memVirtual = criaMemoria(sec_size, page_size);
     Memoria *memPrincipal = criaMemoria(real_size, page_size);
-    memLivre = sec_size;
+    memLivre = real_size;
 
     /** Processos criados */
     Processo **pro = (Processo**) malloc(QTD_PROCESSOS * sizeof(Processo *));
@@ -157,17 +157,16 @@ int main(int argc, char const *argv[]){
         splitString(str, pNumber, &mode, op); //divide linha em tres partes (numero de processo-modo-tamanho/operando)
         //printf("%s - %c - %s", pNumber, mode, op);
         pid = getPID(pNumber);
-
-        switch (mode){
+        printf("Memoria livre: %d\n", memLivre);
+        switch (mode){    
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
-                if(memLivre >= atoi(op)){
-                    pro[pid-1] = criaProcesso(pid, memPrincipal, qtdPag, atoi(op), page_size);
+                if(memLivre >= page_size){
+                    pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre);
                     if(pro[pid-1] == NULL)
                         printf("Erro ao criar processo\n");
                     else{
-                        printf("Processo %d criado!\n", pid);            
-                        memLivre -= atoi(op); //diminui quantidade de memoria secundaria livre devido ao processo criado
+                        printf("Processo %d criado!\n", pid);
                     }
                 }
                 else{
@@ -176,8 +175,9 @@ int main(int argc, char const *argv[]){
                 break;
             case 'R':
                 // Lê o endereço de memoria especificado logo após
-                if(maxEnd > getDec(mode, op))
-                    lerEndereco(pro[pid-1], memPrincipal, getDec(mode, op), page_size);
+                if(maxEnd > getDec(mode, op)){
+                    lerEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre);
+                }
                 else{
                     printf("O endereco logico tem mais bits que o permitido.\n");
                 }
@@ -185,7 +185,7 @@ int main(int argc, char const *argv[]){
             case 'W':
                 // Escrita no endereço especificado logo após
                 if(maxEnd > getDec(mode, op))
-                    escreverEndereco(pro[pid-1], memPrincipal, getDec(mode, op), page_size, memLivre);
+                    escreverEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre);
                 else
                     printf("O endereco logico tem mais bits que o permitido.\n");
                 break;
@@ -203,7 +203,7 @@ int main(int argc, char const *argv[]){
     }
     fclose(fp);
 
-    //destroiMemoria(memVirtual);
+    destroiMemoria(memVirtual);
     destroiMemoria(memPrincipal);
 
     return 0;

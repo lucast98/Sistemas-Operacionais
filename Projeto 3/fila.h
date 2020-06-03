@@ -22,3 +22,5 @@ int estaVazia(Fila*);
 
 /** Move pagina para o final da fila */
 void moveFim(Fila*, int);
+
+void printFila(Fila*);

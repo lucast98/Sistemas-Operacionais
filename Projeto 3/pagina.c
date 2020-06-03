@@ -23,7 +23,7 @@ void insereTabela(tabelaPagina *tabPag, Swap swap, bit_pres_aus bpa, int pagina,
 }
 
 /** Remove elemento na tabela de paginas */
-void removeTabela(tabelaPagina *tabPag, int pagina){
+void removePagina(tabelaPagina *tabPag, int pagina){
     tabPag->paginas[pagina].swap = 0;
     tabPag->paginas[pagina].bpa = 0;
     tabPag->paginas[pagina].quadro = -1;

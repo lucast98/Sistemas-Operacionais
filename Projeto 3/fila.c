@@ -54,9 +54,7 @@ int estaVazia(Fila *fila){
 void moveFim(Fila *fila, int pag){
     Elemento *elem = fila->inicio;
     Elemento *ant;
-    if(elem == NULL)
-        return;
-
+    
     //loop para procurar o elemento a ser movido
     while (elem != NULL){
         if(elem->pag == pag)
@@ -64,6 +62,9 @@ void moveFim(Fila *fila, int pag){
         ant = elem;
         elem = elem->prox;
     }
+
+    if(elem == NULL)
+        return;
 
     //indica que já é o ultimo elemento
     if(elem == fila->fim)
@@ -81,4 +82,16 @@ void moveFim(Fila *fila, int pag){
         fila->fim->prox = elem; //indica que o atual fim tem um proximo
         fila->fim = elem; //atualiza o fim da fila
     }
+}
+
+void printFila(Fila *fila){
+    Elemento *elem = fila->inicio;
+    printf("Fila: ");
+    while (elem != NULL){
+        printf("%d ", elem->pag);
+        elem = elem->prox;
+        if(elem != NULL)
+            printf("-> ");
+    }
+    printf("\n");
 }

@@ -29,4 +29,4 @@ tabelaPagina* iniciaTabela(int);
 void insereTabela(tabelaPagina*, Swap, bit_pres_aus, int, int);
 
 /** Remove elemento na tabela de paginas */
-void removeTabela(tabelaPagina*, int);
+void removePagina(tabelaPagina*, int);
