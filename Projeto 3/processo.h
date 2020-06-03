@@ -7,7 +7,6 @@ typedef struct Processo{
     int PID; //identificador de processo
     tabelaPagina *tabPag; //Tabela de paginas
     int pagsUsadas; //qtd de paginas ocupadas
-    Swap swap; //indica se o processo sofreu swap-out
     Fila *filaPags; // Fila de páginas na memória para fazer LRU
 } Processo;
 

@@ -1,17 +1,9 @@
-//#include "processo.h"
-
-/** swaped */
-typedef enum Swap{
-    not_swaped, swaped
-}Swap;
-
 /** bit presente/ausente */
 typedef enum pres_aus{
     ausente, presente
 } bit_pres_aus;
 
 typedef struct item_tabelaPagina{
-    Swap swap;
     bit_pres_aus bpa;
     int quadro;
 }item_tabelaPagina;
@@ -26,7 +18,7 @@ typedef struct tabelaPagina{
 tabelaPagina* iniciaTabela(int);
 
 /** Insere elemento na tabela de paginas */
-void insereTabela(tabelaPagina*, Swap, bit_pres_aus, int, int);
+void inserePagina(tabelaPagina*, bit_pres_aus, int, int);
 
 /** Remove elemento na tabela de paginas */
 void removePagina(tabelaPagina*, int);

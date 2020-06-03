@@ -12,7 +12,6 @@ Processo* criaProcesso(int pid, Memoria *memPrincipal, Memoria *memVirtual, int 
     p->tam = tamProcesso;
     p->PID = pid;
     p->pagsUsadas = 0; //processo ainda nao utiliza nenhuma pagina
-    p->swap = not_swaped;
     p->tabPag = iniciaTabela(qtdPag); //cria tabela de paginas do processo
     p->filaPags = criaFila(); //cria fila para LRU
 
@@ -21,13 +20,13 @@ Processo* criaProcesso(int pid, Memoria *memPrincipal, Memoria *memVirtual, int 
     while(tamProcesso > 0){
         if(pag == 0){ //coloca primeira pagina na memoria principal
             quadro = insereQuadro(memPrincipal, p->PID, pag); //insere um novo quadro na memoria fisica
-            insereTabela(p->tabPag, not_swaped, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
+            inserePagina(p->tabPag, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
             push(p->filaPags, pag); //insere paginas na fila
             *memLivre -= tamPag; //diminui quantidade de memoria secundaria livre devido ao processo criado ter colocado sua primeira pagina na principal
         }
         else{ //coloca demais paginas na memoria virtual
             pagina = insereQuadro(memVirtual, p->PID, pag); //insere uma nova pagina na memoria virtual
-            insereTabela(p->tabPag, not_swaped, ausente, pag, pagina+1); //insere um novo elemento na tabela de paginas
+            inserePagina(p->tabPag, ausente, pag, pagina+1); //insere um novo elemento na tabela de paginas
         }
         pag++;
         tamProcesso -= tamPag;
@@ -59,7 +58,7 @@ void lerEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int en
             int pagina = p->tabPag->paginas[pag].quadro;
             int quadro = insereQuadro(memPrincipal, p->PID, pagina); //insere um novo quadro na memoria fisica
             removePagina(p->tabPag, pag); //remove pagina da tabela
-            insereTabela(p->tabPag, not_swaped, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
+            inserePagina(p->tabPag, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
             push(p->filaPags, pag); //insere nova pagina na fila
             printf("Processo %d acessou pagina %d no quadro %d e leu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, memPrincipal->quadros[p->tabPag->paginas[pag].quadro].elemento);
             moveFim(p->filaPags, pag); //move pagina para o final da fila
@@ -105,7 +104,7 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
             int pagina = p->tabPag->paginas[pag].quadro;
             int quadro = insereQuadro(memPrincipal, p->PID, pagina); //insere um novo quadro na memoria fisica
             removePagina(p->tabPag, pag); //remove pagina da tabela
-            insereTabela(p->tabPag, not_swaped, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
+            inserePagina(p->tabPag, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
             push(p->filaPags, pag); //insere nova pagina na fila
             
             atualizaQuadro(memPrincipal, quadro, var);
@@ -115,9 +114,9 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
         }
         else{ //aplica algoritmo de substituicao
             if(alg == 'L'){ //usará o LRU
-                //printFila(p->filaPags);
+                printFila(p->filaPags);
                 trocaPaginaLRU(p, memPrincipal, memVirtual, pag);
-                //printFila(p->filaPags);
+                printFila(p->filaPags);
             }
             else{//usará o ...
 
@@ -131,8 +130,12 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
 /** Troca uma nova pagina por uma antiga com o LRU */
 void trocaPaginaLRU(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int pag){
     int quadro, pagRemovida, novoQuadro, elemento;
-    //printf("pag: %d\n", pag);
     quadro = p->tabPag->paginas[pag].quadro; //encontra a nova pagina na memoria principal
+
+    if(estaVazia(p->filaPags)){
+        printf("Nao foi possui aplicar o LRU, pois a fila esta vazia.\n");
+        return;
+    }
 
     pagRemovida = pop(p->filaPags); //pega a pagina utilizada menos recentemente
     novoQuadro = p->tabPag->paginas[pagRemovida].quadro; //encontra essa pagina na memoria principal
@@ -141,13 +144,13 @@ void trocaPaginaLRU(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int
     memPrincipal->quadros[novoQuadro].PID = p->PID;
     memPrincipal->quadros[novoQuadro].numPag = pag;
     memPrincipal->quadros[novoQuadro].elemento = memPrincipal->quadros[quadro].elemento;
-    insereTabela(p->tabPag, not_swaped, presente, pag, novoQuadro); 
+    inserePagina(p->tabPag, presente, pag, novoQuadro); 
 
     //insere pagina antiga na memoria virtual
     memVirtual->quadros[quadro].PID = p->PID;
     memVirtual->quadros[quadro].numPag = pagRemovida;
     memVirtual->quadros[quadro].elemento = memPrincipal->quadros[pagRemovida].elemento;
-    insereTabela(p->tabPag, not_swaped, ausente, pagRemovida, quadro); //altera o registro da pagina antiga na tabela
+    inserePagina(p->tabPag, ausente, pagRemovida, quadro); //altera o registro da pagina antiga na tabela
     push(p->filaPags, pag); //insere nova pagina no fim da fila
 
     printf("LRU: Pagina %d foi trocada pela %d.\n", pagRemovida, pag);

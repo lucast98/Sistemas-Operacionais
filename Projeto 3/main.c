@@ -7,14 +7,13 @@
 #include <pthread.h>
 #include <math.h>
 #include <unistd.h>
-//#include "pagina.h"
-//#include "memoria.h"
 #include "processo.h"
 
-#define QTD_PROCESSOS 10
+#define QTD_PROCESSOS 10 //quantidade maxima de processos
 
 /** Executar com ./nome_exec arquivoSimular.txt */
 
+/** Decimal para binario */
 char* decTobin(int n){
     int i, j;
     int a[20];
@@ -36,6 +35,7 @@ char* decTobin(int n){
     return bin;
 }
 
+/** Obtem o valor entre parenteses no arquivo */
 int getDec(char mode, char *dec){
     int valor = 0;
     int i, j=0;
@@ -87,7 +87,6 @@ int main(int argc, char const *argv[]){
     // esperado: P1 C (1024)2 ou ##### início do arquivo ######    
     int pid;
     int qtdPag;
-    int qtdQuad;
     int maxEnd; //quantidade maxima de enderecos possiveis
     int memLivre; //memoria secundaria livre
 
@@ -138,7 +137,6 @@ int main(int argc, char const *argv[]){
             printf("Digite um algoritmo de substituicao valido.\n");
     }while(subs_alg != 'L' && subs_alg != 'R');
     qtdPag = sec_size/page_size; //unidades de tamanho fixo no dispositivo secundario
-    qtdQuad = real_size/page_size; //unidades correspondentes na memoria fisica
     maxEnd = pow(2, logic_size); //endereco maximo permitido (por causa dos bits)
 
     /** Cria memoria virtual e principal */
@@ -221,7 +219,6 @@ int main(int argc, char const *argv[]){
     i++;
     }
     printf("++--------+--------++--------+--------++--------+--------++--------+--------++\n");
-
     //modelo B
     i=0;
     while(i!=8){

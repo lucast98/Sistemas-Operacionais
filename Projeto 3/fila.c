@@ -86,3 +86,10 @@ void printFila(Fila *fila){
     }
     printf("\n");
 }
+
+/** Verifica se a fila está vazia */
+int estaVazia(Fila *fila){
+    if(fila->inicio == NULL)
+        return 1;
+    return 0;
+}

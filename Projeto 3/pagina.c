@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include "processo.h"
-//#include "memoria.h"
 #include "pagina.h"
 
 /** Cria uma nova tabela de paginas */
@@ -16,15 +14,13 @@ tabelaPagina* iniciaTabela(int tam){
 }
 
 /** Insere elemento na tabela de paginas */
-void insereTabela(tabelaPagina *tabPag, Swap swap, bit_pres_aus bpa, int pagina, int quadro){
-    tabPag->paginas[pagina].swap = swap;
+void inserePagina(tabelaPagina *tabPag, bit_pres_aus bpa, int pagina, int quadro){
     tabPag->paginas[pagina].bpa = bpa;
     tabPag->paginas[pagina].quadro = quadro;
 }
 
 /** Remove elemento na tabela de paginas */
 void removePagina(tabelaPagina *tabPag, int pagina){
-    tabPag->paginas[pagina].swap = 0;
     tabPag->paginas[pagina].bpa = 0;
     tabPag->paginas[pagina].quadro = -1;
 }

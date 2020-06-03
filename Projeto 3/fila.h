@@ -22,3 +22,6 @@ void moveFim(Fila*, int);
 
 /** Printa todos os elementos da fila */
 void printFila(Fila*);
+
+/** Verifica se a fila está vazia */
+int estaVazia(Fila*);
