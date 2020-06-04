@@ -2,38 +2,12 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <pthread.h>
 #include <math.h>
-#include <unistd.h>
 #include "processo.h"
 
 #define QTD_PROCESSOS 10 //quantidade maxima de processos
 
 /** Executar com ./nome_exec arquivoSimular.txt */
-
-/** Decimal para binario */
-char* decTobin(int n){
-    int i, j;
-    int a[20];
-    char* bin;
-
-    for(i=0;n>0;i++){
-        a[i]=n%2;
-        n=n/2;    
-    }
-    if(i==0)//caso especial
-        return "0";
-
-    bin = (char *)calloc(i,sizeof(char));
-    j=0;
-    for(i=i-1;i>=0;i--){
-        bin[j] = a[i] + 48; //transformar numero inteiro em char
-        j++;
-    }
-    return bin;
-}
 
 /** Obtem o valor entre parenteses no arquivo */
 int getDec(char mode, char *dec){
