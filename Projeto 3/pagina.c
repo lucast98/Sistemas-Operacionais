@@ -24,3 +24,14 @@ void removePagina(tabelaPagina *tabPag, int pagina){
     tabPag->paginas[pagina].bpa = 0;
     tabPag->paginas[pagina].quadro = -1;
 }
+
+/** Printa tabela de paginas */
+void printTabela(tabelaPagina *tabPag){
+    int i = 0;
+    while(i < tabPag->tam){
+        if(tabPag->paginas[i].bpa == presente)
+            printf("%d ",tabPag->paginas[i].quadro);
+        i++;
+    }
+    printf("\n");
+}

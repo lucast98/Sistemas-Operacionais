@@ -84,7 +84,8 @@ int getPID(char *pNumber){
 int main(int argc, char const *argv[]){
     // abrir o arquivo 
     // ler a primeira linha
-    // esperado: P1 C (1024)2 ou ##### início do arquivo ######    
+    // esperado: P1 C (1024)2 ou ##### início do arquivo ######
+
     int pid;
     int qtdPag;
     int maxEnd; //quantidade maxima de enderecos possiveis
@@ -155,6 +156,7 @@ int main(int argc, char const *argv[]){
         /* lendo arquivo */
         if(str[0] == '#')
             continue; //evita comentario
+        printf("\n--> Comando: %s", str);
         splitString(str, pNumber, &mode, op); //divide linha em tres partes (numero de processo-modo-tamanho/operando)
         //printf("%s - %c - %s", pNumber, mode, op);
         pid = getPID(pNumber);
@@ -162,26 +164,17 @@ int main(int argc, char const *argv[]){
         switch (mode){    
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
-                if(memLivre >= page_size){
-                    pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre);
-                    if(pro[pid-1] == NULL)
-                        printf("Erro ao criar processo\n");
-                    else{
-                        printf("Processo %d criado!\n", pid);
-                    }
-                }
-                else{
+                if(memLivre >= page_size)
+                    pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre, subs_alg);
+                else
                     printf("Nao e possivel criar um processo, pois nao ha espaco na memoria.\n");
-                }
                 break;
             case 'R':
                 // Lê o endereço de memoria especificado logo após
-                if(maxEnd > getDec(mode, op)){
+                if(maxEnd > getDec(mode, op))
                     lerEndereco(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, &memLivre, subs_alg);
-                }
-                else{
+                else
                     printf("O endereco logico tem mais bits que o permitido.\n");
-                }
                 break;
             case 'W':
                 // Escrita no endereço especificado logo após
@@ -191,16 +184,19 @@ int main(int argc, char const *argv[]){
                     printf("O endereco logico tem mais bits que o permitido.\n");
                 break;
             case 'P':
-                operacaoCPU(pro[pid-1], memPrincipal, getDec(mode, op), page_size);
                 // Indicando instrução a ser executada pela CPU
+                operacaoCPU(pro[pid-1], memPrincipal, getDec(mode, op), page_size, subs_alg);
                 break;
             case 'I':
-                operacaoIO(pro[pid-1], memPrincipal, getDec(mode, op), page_size);
                 // Indicando instrução de I/O
+                operacaoIO(pro[pid-1], memPrincipal, getDec(mode, op), page_size, subs_alg);
                 break;
             default:
                 break;
         }
+        printf("Aperte enter para continuar...\n");
+        fflush(stdin); //limpa o buffer do teclado
+        while(getchar() != '\n'); //verifica se o enter foi apertado
     }
     fclose(fp);
 

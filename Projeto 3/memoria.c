@@ -26,18 +26,24 @@ void destroiMemoria(Memoria *mem){
 
 /** Insere um quadro na memoria */
 int insereQuadro(Memoria *mem, int pid, int numPag){
+    int quadro = quadroLivre(mem);
+    mem->quadros[quadro].PID = pid;
+    mem->quadros[quadro].numPag = numPag;
+    mem->quadros[quadro].elemento = 0;
+    mem->quadrosLivres[quadro] = 0;
+    mem->qtd_quadrosLivres--; //decrementa o numero total de quadros
+    
+    return quadro;
+}
+
+/** retorna o quadro livre */
+int quadroLivre(Memoria *mem){
     int i;
     for(i = 0; i < mem->tam; i++){
         if(mem->quadrosLivres[i] == 1)
-            break;
+            return i;
     }
-    mem->quadros[i].PID = pid;
-    mem->quadros[i].numPag = numPag;
-    mem->quadros[i].elemento = 0;
-    mem->quadrosLivres[i] = 0;
-    mem->qtd_quadrosLivres--; //decrementa o numero total de quadros
-    
-    return i;
+    return -1;
 }
 
 /** Função para atualizar o elemento do quadro */
@@ -52,4 +58,15 @@ void removeQuadro(Memoria *mem, int quadro){
     mem->quadros[quadro].numPag = -1;
     mem->quadrosLivres[quadro] = 1; //o quadro esta livre
     mem->qtd_quadrosLivres++; //incrementa o numero total de quadros
+}
+
+/** Printa a memoria na tela */
+void printMemoria(Memoria *mem, int tamPag){
+    int i;
+    printf("PID Pagina Quadro Elemento\n");
+    for(i = 0; i < mem->tam/tamPag; i++){
+        if(mem->quadros[i].PID != 0) //se for diferente de 0, espaco da memoria esta ocupado
+            printf(" %d    %d      %d       %d\n", mem->quadros[i].PID, mem->quadros[i].numPag, i, mem->quadros[i].elemento);
+    }
+    //printf("\n");
 }

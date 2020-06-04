@@ -22,3 +22,6 @@ void inserePagina(tabelaPagina*, bit_pres_aus, int, int);
 
 /** Remove elemento na tabela de paginas */
 void removePagina(tabelaPagina*, int);
+
+/** Printa tabela de paginas */
+void printTabela(tabelaPagina*);

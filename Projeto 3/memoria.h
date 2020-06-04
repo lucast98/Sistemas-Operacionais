@@ -22,8 +22,14 @@ void destroiMemoria(Memoria*);
 /** Insere um quadro na memoria */
 int insereQuadro(Memoria*, int, int);
 
+/** Retorna o quadro livre */
+int quadroLivre(Memoria*);
+
 /** Função para atualizar o elemento do quadro */
 void atualizaQuadro(Memoria*, int, int);
 
 /** Remove um quadro da memoria */
 void removeQuadro(Memoria*, int);
+
+/** Printa a memoria na tela */
+void printMemoria(Memoria*, int);
