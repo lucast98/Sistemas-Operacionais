@@ -11,7 +11,7 @@ Fila *criaFila(){
     return fila;
 }
 
-/** Insere pagina na fila */
+/** Insere pagina no fim da fila */
 void push(Fila *fila, int pag){
     Elemento *elem = (Elemento *)malloc(sizeof(Elemento));
     elem->pag = pag;

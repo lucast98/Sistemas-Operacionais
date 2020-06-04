@@ -19,8 +19,8 @@ void lerEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 /** Escreve o endereco referenciado pela tabela do processo */
 void escreverEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 
-/** Troca uma nova pagina por uma antiga com o LRU */
-void trocaPaginaLRU(Processo*, Memoria*, Memoria*, int, int);
+/** Troca uma pagina antiga por uma nova com o LRU e o FIFO */
+void trocaPaginaLRU_FIFO(Processo*, Memoria*, Memoria*, int, int);
 
 /** Indica instrução a ser executada pela CPU */
 void operacaoCPU(Processo*, Memoria*, int, int, char);

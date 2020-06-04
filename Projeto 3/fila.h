@@ -11,7 +11,7 @@ typedef struct fila{
 /** Cria uma nova fila */
 Fila *criaFila();
 
-/** Insere pagina na fila */
+/** Insere pagina no fim da fila */
 void push(Fila*, int);
 
 /** Remove pagina da fila (primeiro elemento)*/
