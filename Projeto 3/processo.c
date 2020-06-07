@@ -114,7 +114,10 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
             inserePagina(p->tabPag, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
             push(p->filaPags, pag); //insere nova pagina na fila
             atualizaQuadro(memPrincipal, quadro, var);
-            removeQuadro(memVirtual, encontraQuadro(memVirtual, p->PID, tamPag, pag)); //remove da memoria virtual
+            int pagina = encontraQuadro(memVirtual, p->PID, tamPag, pag);
+            if(pagina == -1)
+                return;
+            removeQuadro(memVirtual, pagina); //remove da memoria virtual
             printf("Processo %d acessou pagina %d no quadro %d e escreveu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, memPrincipal->quadros[quadro].elemento);
             if(alg == 'L')
                 moveFim(p->filaPags, pag); //move pagina para o final da fila

@@ -114,15 +114,19 @@ int main(int argc, char const *argv[]){
         if(real_size % page_size != 0)
             printf("Digite um tamanho de memoria que seja multiplo do quadro.\n");
     }while(real_size % page_size != 0);
-    printf("Digite o tamanho maximo da memoria secundaria: ");
-    scanf("%d", &sec_size); //tamanho da memoria virtual
     do{
-        printf("Digite o algoritmo de substituicao a ser utilizado (L para LRU ou R para relogio): ");
+        printf("Digite o tamanho maximo da memoria secundaria: ");
+        scanf("%d", &sec_size); //tamanho da memoria virtual
+        if(sec_size < real_size)
+            printf("Recomenda-se que a memoria secundaria seja maior ou igual a principal.\n");
+    }while(sec_size < real_size);
+    do{
+        printf("Digite o algoritmo de substituicao a ser utilizado (L para LRU ou F para FIFO): ");
         scanf(" %c", &subs_alg);
         subs_alg = toupper(subs_alg); //deixa sempre maiusculo
-        if(subs_alg != 'L' && subs_alg != 'R')
+        if(subs_alg != 'L' && subs_alg != 'F')
             printf("Digite um algoritmo de substituicao valido.\n");
-    }while(subs_alg != 'L' && subs_alg != 'R');
+    }while(subs_alg != 'L' && subs_alg != 'F');
 
     qtdPag = sec_size/page_size; //unidades de tamanho fixo no dispositivo secundario
     maxEnd = pow(2, logic_size); //endereco maximo permitido (por causa dos bits)
