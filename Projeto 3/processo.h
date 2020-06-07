@@ -23,10 +23,10 @@ void escreverEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 void trocaPaginaLRU_FIFO(Processo*, Memoria*, Memoria*, int, int);
 
 /** Indica instrução a ser executada pela CPU */
-void operacaoCPU(Processo*, Memoria*, int, int, char);
+void operacaoCPU(Processo*, Memoria*, Memoria*, int, int, char);
     
 /** Indica instrução a ser executada pelo IO */
-void operacaoIO(Processo*, Memoria*, int, int, char);
+void operacaoIO(Processo*, Memoria*, Memoria*, int, int, char);
 
 /** Printa processo na tela */
 void printProcesso(Processo*, char);

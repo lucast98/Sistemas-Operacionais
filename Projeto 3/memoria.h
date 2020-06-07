@@ -31,5 +31,8 @@ void atualizaQuadro(Memoria*, int, int);
 /** Remove um quadro da memoria */
 void removeQuadro(Memoria*, int);
 
+/** Encontra um quadro da memoria */
+int encontraQuadro(Memoria*, int, int, int);
+
 /** Printa a memoria na tela */
-void printMemoria(Memoria*, int);
+void printMemoria(Memoria*, Memoria*, int);

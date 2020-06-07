@@ -60,13 +60,29 @@ void removeQuadro(Memoria *mem, int quadro){
     mem->qtd_quadrosLivres++; //incrementa o numero total de quadros
 }
 
-/** Printa a memoria na tela */
-void printMemoria(Memoria *mem, int tamPag){
-    int i;
-    printf("PID Pagina Quadro Elemento\n");
-    for(i = 0; i < mem->tam/tamPag; i++){
-        if(mem->quadros[i].PID != 0) //se for diferente de 0, espaco da memoria esta ocupado
-            printf(" %d    %d      %d       %d\n", mem->quadros[i].PID, mem->quadros[i].numPag, i, mem->quadros[i].elemento);
+/** Encontra um quadro da memoria */
+int encontraQuadro(Memoria *mem, int pid, int tamPag, int pag){
+    int quadro;
+    for(quadro = 0; quadro < mem->tam/tamPag; quadro++){
+        if(mem->quadros[quadro].PID == pid && mem->quadros[quadro].numPag == pag)
+            return quadro; //encontrou
     }
-    //printf("\n");
+    return -1; //nao encontrou
+}
+
+/** Printa a memoria na tela */
+void printMemoria(Memoria *memPrincipal, Memoria *memVirtual, int tamPag){
+    int i;
+    printf("-> Memoria Principal:\n");
+    printf("PID Pagina Quadro Elemento\n");
+    for(i = 0; i < memPrincipal->tam/tamPag; i++){
+        if(memPrincipal->quadros[i].PID != 0) //se for diferente de 0, espaco da memoria esta ocupado
+            printf(" %d    %d      %d       %d\n", memPrincipal->quadros[i].PID, memPrincipal->quadros[i].numPag, i, memPrincipal->quadros[i].elemento);
+    }
+    printf("-> Memoria Virtual:\n");
+    printf("PID Pagina Quadro Elemento\n");
+    for(i = 0; i < memVirtual->tam/tamPag; i++){
+        if(memVirtual->quadros[i].PID != 0) //se for diferente de 0, espaco da memoria esta ocupado
+            printf(" %d    %d      %d       %d\n", memVirtual->quadros[i].PID, memVirtual->quadros[i].numPag, i, memVirtual->quadros[i].elemento);
+    }
 }

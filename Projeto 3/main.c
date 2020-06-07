@@ -5,9 +5,19 @@
 #include <math.h>
 #include "processo.h"
 
-#define QTD_PROCESSOS 10 //quantidade maxima de processos
+#define QTD_PROCESSOS 100 //quantidade maxima de processos
 
 /** Executar com ./nome_exec arquivoSimular.txt */
+
+/** Limpa o buffer do teclado e verifica se enter foi apertado */
+void pressEnter(FILE* in, int *first){
+    int c;
+    while((c = fgetc(in)) != EOF && c != '\n');
+    if(*first == 1){
+        *first = 0;
+        while((c = fgetc(in)) != EOF && c != '\n');
+    }
+}
 
 /** Obtem o valor entre parenteses no arquivo */
 int getDec(char mode, char *dec){
@@ -64,6 +74,8 @@ int main(int argc, char const *argv[]){
     int qtdPag;
     int maxEnd; //quantidade maxima de enderecos possiveis
     int memLivre; //memoria secundaria livre
+    int qtdProc; //quantidade atual de processos
+    int first = 1; //indica que é o primeiro comando
 
     FILE *fp;
     char str[60]; //armazena a linha do arquivo
@@ -111,8 +123,10 @@ int main(int argc, char const *argv[]){
         if(subs_alg != 'L' && subs_alg != 'R')
             printf("Digite um algoritmo de substituicao valido.\n");
     }while(subs_alg != 'L' && subs_alg != 'R');
+
     qtdPag = sec_size/page_size; //unidades de tamanho fixo no dispositivo secundario
     maxEnd = pow(2, logic_size); //endereco maximo permitido (por causa dos bits)
+    qtdProc = 0; //nao tem processo nenhum
 
     /** Cria memoria virtual e principal */
     Memoria *memVirtual = criaMemoria(sec_size, page_size);
@@ -138,8 +152,14 @@ int main(int argc, char const *argv[]){
         switch (mode){    
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
-                if(memLivre >= page_size)
-                    pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre, subs_alg);
+                if(memLivre >= page_size){
+                    if(qtdProc <= QTD_PROCESSOS){ //verifica se nao ultrapassou a qtd de processo permitida
+                        pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre, subs_alg);
+                        qtdProc++;
+                    }
+                    else
+                        printf("Nao e possivel criar um processo, pois a quantidade foi excedida.\n");                    
+                }
                 else
                     printf("Nao e possivel criar um processo, pois nao ha espaco na memoria.\n");
                 break;
@@ -159,18 +179,17 @@ int main(int argc, char const *argv[]){
                 break;
             case 'P':
                 // Indicando instrução a ser executada pela CPU
-                operacaoCPU(pro[pid-1], memPrincipal, getDec(mode, op), page_size, subs_alg);
+                operacaoCPU(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, subs_alg);
                 break;
             case 'I':
                 // Indicando instrução de I/O
-                operacaoIO(pro[pid-1], memPrincipal, getDec(mode, op), page_size, subs_alg);
+                operacaoIO(pro[pid-1], memPrincipal, memVirtual, getDec(mode, op), page_size, subs_alg);
                 break;
             default:
                 break;
         }
         printf("Aperte enter para continuar...\n");
-        fflush(stdin); //limpa o buffer do teclado
-        while(getchar() != '\n'); //verifica se o enter foi apertado
+        pressEnter(stdin, &first); //limpa o buffer do teclado e verifica se o enter foi apertado
     }
     fclose(fp);
 
@@ -179,24 +198,3 @@ int main(int argc, char const *argv[]){
 
     return 0;
 }
-
-/*
-    //modelo A
-    i=0;
-    while(i!=8){
-    printf("++--------+--------++--------+--------++--------+--------++--------+--------++\n");
-    printf("||  &d  \\  &d  ||  &d  \\  &d  ||  &d  \\  &d  ||  &d  \\  &d  ||\n",p1,e1,p2,e2,p3,e3,p4,e4);
-    i++;
-    }
-    printf("++--------+--------++--------+--------++--------+--------++--------+--------++\n");
-    //modelo B
-    i=0;
-    while(i!=8){
-    printf("++--------++--------++--------++--------++--------++--------++--------++--------++\n");
-    printf("||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||\n",p1,p2,p3,p4,p5,p6,p7,p8);
-    printf("||--------||--------||--------||--------||--------||--------||--------||--------||\n");
-    printf("||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||  &d  ||\n",e1,e2,e3,e4,e5,e6,e7,e8);
-    printf("++--------++--------++--------++--------++--------++--------++--------++--------++\n");
-    i++;
-    }
-*/
