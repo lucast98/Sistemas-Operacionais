@@ -175,7 +175,7 @@ int main(int argc, char const *argv[]){
         switch (mode){    
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
-                if(memLivre >= page_size && atoi(op) <= memLivre){
+                if(memLivre >= page_size && atoi(op)-page_size <= sec_size){
                     if(qtdProc <= QTD_PROCESSOS){ //verifica se nao ultrapassou a qtd de processo permitida
                         pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre, subs_alg);
                         qtdProc++;
