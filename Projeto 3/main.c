@@ -104,22 +104,42 @@ int main(int argc, char const *argv[]){
     }
 
     /** Opções de configuração de mecanismos associados à memória virtual */
-    printf("Digite o tamanho das paginas e quadros de pagina: ");
-    scanf("%d", &page_size);
-    printf("Digite o tamanho em bits do endereco logico: ");
-    scanf("%d", &logic_size);
+    do{
+        printf("Digite o tamanho das paginas e quadros de pagina: ");
+        scanf("%d", &page_size);
+        if(page_size <= 0)
+            printf("Digite um tamanho de pagina maior que zero.\n");
+    }while(page_size <= 0);
+
+    do{
+        printf("Digite o tamanho em bits do endereco logico: ");
+        scanf("%d", &logic_size);
+        if(logic_size <= 0)
+            printf("Digite um tamanho em bits maior que zero.\n");
+    }while(logic_size <= 0);
+    
     do{
         printf("Digite o tamanho da memoria fisica que deve ser multiplo de tamanho da moldura (quadro): ");
         scanf("%d", &real_size);
-        if(real_size % page_size != 0)
-            printf("Digite um tamanho de memoria que seja multiplo do quadro.\n");
-    }while(real_size % page_size != 0);
+        if(real_size <= 0)
+            printf("Digite um tamanho de memoria fisica que seja maior que zero.\n");
+        else{
+            if(real_size % page_size != 0)
+                printf("Digite um tamanho de memoria que seja multiplo do quadro.\n");
+        }
+    }while(real_size % page_size != 0 || real_size <= 0);
+
     do{
         printf("Digite o tamanho maximo da memoria secundaria: ");
         scanf("%d", &sec_size); //tamanho da memoria virtual
-        if(sec_size < real_size)
-            printf("Recomenda-se que a memoria secundaria seja maior ou igual a principal.\n");
-    }while(sec_size < real_size);
+        if(sec_size <= 0)
+            printf("Digite um tamanho de memoria secundaria maior que zero.\n");
+        else{
+            if(sec_size < real_size)
+                printf("Recomenda-se que a memoria secundaria seja maior ou igual a principal.\n");
+        }
+    }while(sec_size < real_size || sec_size <= 0);
+    
     do{
         printf("Digite o algoritmo de substituicao a ser utilizado (L para LRU ou F para FIFO): ");
         scanf(" %c", &subs_alg);
@@ -150,13 +170,12 @@ int main(int argc, char const *argv[]){
             continue; //evita comentario
         printf("\n--> Comando: %s", str);
         splitString(str, pNumber, &mode, op); //divide linha em tres partes (numero de processo-modo-tamanho/operando)
-        //printf("%s - %c - %s", pNumber, mode, op);
         pid = getPID(pNumber);
-        //printf("Memoria livre: %d\n", memLivre);
+
         switch (mode){    
             case 'C':
                 // Criar o processo lido antes desse do tamanho especificado logo em seguida em binário
-                if(memLivre >= page_size){
+                if(memLivre >= page_size && atoi(op) <= memLivre){
                     if(qtdProc <= QTD_PROCESSOS){ //verifica se nao ultrapassou a qtd de processo permitida
                         pro[pid-1] = criaProcesso(pid, memPrincipal, memVirtual, qtdPag, atoi(op), page_size, &memLivre, subs_alg);
                         qtdProc++;

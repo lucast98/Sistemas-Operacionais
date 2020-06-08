@@ -62,14 +62,15 @@ void lerEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int en
     }
     else{
         if(*memLivre > 0){
-            int pagina = p->tabPag->paginas[pag].quadro;
-            int quadro = insereQuadro(memPrincipal, p->PID, pagina); //insere um novo quadro na memoria fisica
+            int quadro = insereQuadro(memPrincipal, p->PID, pag); //insere um novo quadro na memoria fisica
             removePagina(p->tabPag, pag); //remove pagina da tabela
             inserePagina(p->tabPag, presente, pag, quadro); //insere um novo elemento na tabela de paginas e o relaciona com o quadro recem-criado
             push(p->filaPags, pag); //insere nova pagina na fila
             printf("Processo %d acessou pagina %d no quadro %d e leu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, memPrincipal->quadros[p->tabPag->paginas[pag].quadro].elemento);
             if(alg == 'L')
                 moveFim(p->filaPags, pag); //move pagina para o final da fila
+            int pagina = encontraQuadro(memVirtual, p->PID, tamPag, pag);
+            removeQuadro(memVirtual, pagina); //remove da memoria virtual
             *memLivre -= tamPag;
         }
         else{ //aplica o algoritmo de substituicao
@@ -165,6 +166,10 @@ void trocaPaginaLRU_FIFO(Processo *p, Memoria *memPrincipal, Memoria *memVirtual
 
 /** Indica instrução a ser executada pela CPU */
 void operacaoCPU(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int instrucao, int tamPag, char alg){
+    if(p == NULL){
+        printf("Processo nao existe.\n");
+        return;
+    }
     printf("Processo %d executou a instrucao %d, que foi executada pela CPU.\n", p->PID, instrucao);
     printMemoria(memPrincipal, memVirtual, tamPag);
     printProcesso(p, alg);
@@ -172,6 +177,10 @@ void operacaoCPU(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int in
 
 /** Indica instrução a ser executada pelo IO */
 void operacaoIO(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int instrucao, int tamPag, char alg){
+    if(p == NULL){
+        printf("Processo nao existe.\n");
+        return;
+    }
     printf("Processo %d executou a instrucao %d, que e de I/O\n", p->PID, instrucao);
     printMemoria(memPrincipal, memVirtual, tamPag);
     printProcesso(p, alg);
