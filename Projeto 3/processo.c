@@ -74,7 +74,7 @@ void lerEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int en
             *memLivre -= tamPag;
         }
         else{ //aplica o algoritmo de substituicao
-            trocaPaginaLRU_FIFO(p, memPrincipal, memVirtual, pag, memVirtual->quadros[pag].elemento);
+            trocaPaginaLRU_FIFO(p, memPrincipal, memVirtual, pag, memVirtual->quadros[pag].elemento, alg);
             printf("Processo %d acessou pagina %d no quadro %d e leu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, memPrincipal->quadros[p->tabPag->paginas[pag].quadro].elemento);
         }
     }
@@ -125,7 +125,7 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
             *memLivre -= tamPag;
         }
         else{ //aplica algoritmo de substituicao
-            trocaPaginaLRU_FIFO(p, memPrincipal, memVirtual, pag, var);
+            trocaPaginaLRU_FIFO(p, memPrincipal, memVirtual, pag, var, alg);
             //atualizaQuadro(memPrincipal, pag, var);
             printf("Processo %d acessou pagina %d no quadro %d e escreveu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, var);
         }
@@ -135,12 +135,15 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
 }
 
 /** Troca uma pagina antiga por uma nova com o LRU e o FIFO */
-void trocaPaginaLRU_FIFO(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int pag, int var){
+void trocaPaginaLRU_FIFO(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, int pag, int var, char alg){
     int quadro, pagRemovida, novoQuadro, elemento;
     quadro = p->tabPag->paginas[pag].quadro; //encontra a nova pagina na memoria
 
     if(estaVazia(p->filaPags)){
-        printf("Nao foi possivel aplicar o LRU, pois a fila esta vazia.\n");
+        if(alg == 'L')
+            printf("Nao foi possivel aplicar o LRU, pois a fila esta vazia.\n");
+        else
+            printf("Nao foi possivel aplicar o FIFO, pois a fila esta vazia.\n");        
         return;
     }
 
@@ -161,7 +164,10 @@ void trocaPaginaLRU_FIFO(Processo *p, Memoria *memPrincipal, Memoria *memVirtual
     inserePagina(p->tabPag, ausente, pagRemovida, quadro); //altera o registro da pagina antiga na tabela
     push(p->filaPags, pag); //insere nova pagina no fim da fila
 
-    printf("LRU: Pagina %d foi trocada pela %d.\n", pagRemovida, pag);
+    if(alg == 'L')
+        printf("LRU: Pagina %d foi trocada pela %d.\n", pagRemovida, pag);
+    else
+        printf("FIFO: Pagina %d foi trocada pela %d.\n", pagRemovida, pag);    
 }
 
 /** Indica instrução a ser executada pela CPU */

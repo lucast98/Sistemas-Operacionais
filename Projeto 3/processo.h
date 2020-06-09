@@ -20,7 +20,7 @@ void lerEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 void escreverEndereco(Processo*, Memoria*, Memoria*, int, int, int*, char);
 
 /** Troca uma pagina antiga por uma nova com o LRU e o FIFO */
-void trocaPaginaLRU_FIFO(Processo*, Memoria*, Memoria*, int, int);
+void trocaPaginaLRU_FIFO(Processo*, Memoria*, Memoria*, int, int, char);
 
 /** Indica instrução a ser executada pela CPU */
 void operacaoCPU(Processo*, Memoria*, Memoria*, int, int, char);
