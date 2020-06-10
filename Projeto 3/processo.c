@@ -102,8 +102,9 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
     var = (rand() % 9) + 1; //numero aleatorio entre 1 e 9
 
     if(p->tabPag->paginas[pag].bpa == presente){ //verifica se a pagina esta na memoria principal
-        atualizaQuadro(memPrincipal, pag, var);
-        printf("Processo %d acessou pagina %d no quadro %d e escreveu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, memPrincipal->quadros[pag].elemento);
+        int pagina = encontraQuadro(memPrincipal, p->PID, tamPag, pag);
+        atualizaQuadro(memPrincipal, pagina, var);
+        printf("Processo %d acessou pagina %d no quadro %d e escreveu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, memPrincipal->quadros[pagina].elemento);
         if(alg == 'L')
             moveFim(p->filaPags, pag); //move pagina para o final da fila
     }
@@ -128,6 +129,9 @@ void escreverEndereco(Processo *p, Memoria *memPrincipal, Memoria *memVirtual, i
             trocaPaginaLRU_FIFO(p, memPrincipal, memVirtual, pag, var, alg);
             //atualizaQuadro(memPrincipal, pag, var);
             printf("Processo %d acessou pagina %d no quadro %d e escreveu %d.\n", p->PID, pag, p->tabPag->paginas[pag].quadro, var);
+            printMemoria(memPrincipal, memVirtual, tamPag);
+            printProcesso(p, alg);
+            return;
         }
     }
     printMemoria(memPrincipal, memVirtual, tamPag);
